@@ -54,7 +54,7 @@ This assumes that the membrane is built in the xy-plane (with its normal oriente
 
 Do **not** use the flag `-conc` because `gmx genion` calculates the number of ions to add to the system based on the volume of the simulation box. However, as the membrane occupies a substantial part of the system, the number of molecules of water is much lower than `gmx genion` assumes and therefore also the number of ions must be lower than calculated by `gmx genion`. When preparing membrane systems, you should always calculate the salt concentration manually (or by using `insane` in case of Martini simulations).
 
-### How to calculate salt concentration
+### How to calculate number of ions
 
 _N_ = _c_ (_W_ / _c_<sub>W</sub>)
 
@@ -65,6 +65,12 @@ Note that one Martini bead corresponds to 4 water molecules.
 ### What is physiological salt concentration
 
 0.154 mol dm<sup>-3</sup>
+
+### How to get free energies from AWH simulation
+
+`gmx awh -f {EDR_FILE}.edr -s {TPR_FILE}.tpr -o awh.xvg`
+
+In case your simulation was divided into multiple cycles and/or was run with multiple walkers, `{EDR_FILE}` is `.edr` file from any walker and the last cycle, `{TPR_FILE}` is `.tpr` file from any walker and any cycle.
 
 ***
 
@@ -113,6 +119,16 @@ Symmetric membrane composed of multiple lipid types:
 Asymmetric membrane:
 
 `insane -f {PROTEIN}.pdb -m {MARTINI_PHOSPHOLIPIDS}.itp -l {LOWER_LIPID} -u {UPPER_LIPID} -d {DISTANCE_BETWEEN_PERIODIC_IMAGES} -z {Z_DIMENSION} -sol W -o system.gro -p system.top -pbc square -center -salt 0.154`
+
+### How to visualize a Martini peptide using Licorice
+
+(How to add bond information into a pdb file.)
+
+1) `gmx trjconv -f {GRO_FILE}.gro -s {TPR_FILE}.tpr -pbc whole -conect -o output.pdb`
+
+2) In `output.pdb`, remove the line containing `ENDMDL`.
+
+3) Visualize with VMD.
 
 ***
 
